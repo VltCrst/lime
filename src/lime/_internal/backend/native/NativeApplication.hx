@@ -8,7 +8,6 @@ import lime.app.FrameOptions;
 import lime.app.FrameProfile;
 import lime.app.TimePrecision;
 import lime.app.UncapMode;
-import lime.app.VSyncMode;
 import lime.graphics.opengl.GL;
 import lime.graphics.OpenGLRenderContext;
 import lime.graphics.RenderContext;
@@ -198,13 +197,6 @@ class NativeApplication
 		#end
 	}
 
-	public function setVSyncMode(mode:VSyncMode):Void
-	{
-		#if (!macro && lime_cffi)
-		NativeCFFI.lime_application_set_vsync_mode(handle, __convertVSyncMode(mode));
-		#end
-	}
-
 	private function handleApplicationEvent():Void
 	{
 		switch (applicationEventInfo.type)
@@ -262,17 +254,6 @@ class NativeApplication
 		{
 			case Soft: 1;
 			case Hard: 2;
-			default: 0;
-		};
-	}
-
-	private inline function __convertVSyncMode(value:VSyncMode):Int
-	{
-		return switch (value)
-		{
-			case On: 1;
-			case Adaptive: 2;
-			case Auto: 3;
 			default: 0;
 		};
 	}

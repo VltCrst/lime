@@ -6,7 +6,6 @@ import js.Browser;
 import lime.app.Application;
 import lime.app.FrameOptions;
 import lime.app.FrameProfile;
-import lime.app.VSyncMode;
 import lime.media.AudioManager;
 import lime.system.Orientation;
 import lime.system.Sensor;
@@ -437,8 +436,6 @@ class HTML5Application
 
 		Browser.window.requestAnimationFrame(cast handleApplicationEvent);
 	}
-
-	public function setVSyncMode(mode:VSyncMode):Void {}
 
 	private function handleKeyEvent(event:KeyboardEvent):Void
 	{

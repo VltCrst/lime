@@ -5,7 +5,6 @@ import flash.ui.Multitouch;
 import lime.app.Application;
 import lime.app.FrameOptions;
 import lime.app.FrameProfile;
-import lime.app.VSyncMode;
 import lime.media.AudioManager;
 import lime.system.Orientation;
 import lime.ui.Window;
@@ -45,6 +44,4 @@ class FlashApplication
 	{
 		return UNKNOWN;
 	}
-
-	public function setVSyncMode(mode:VSyncMode):Void {}
 }

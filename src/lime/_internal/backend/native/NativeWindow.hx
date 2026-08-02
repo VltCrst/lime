@@ -3,7 +3,6 @@ package lime._internal.backend.native;
 import haxe.io.Bytes;
 import lime._internal.backend.native.NativeCFFI;
 import lime.app.Application;
-import lime.app.VSyncMode;
 import lime.graphics.cairo.Cairo;
 import lime.graphics.cairo.CairoFormat;
 import lime.graphics.cairo.CairoImageSurface;
@@ -65,7 +64,6 @@ class NativeWindow
 		var contextAttributes = Reflect.hasField(attributes, "context") ? attributes.context : {};
 
 		var resolvedFrameRate = parent.application.__resolveFrameRate(attributes);
-		var resolvedVSyncMode = parent.application.__resolveVSyncMode(attributes);
 		var title = Reflect.hasField(attributes, "title") ? attributes.title : "Lime Application";
 		var flags = 0;
 		var transparent = Reflect.hasField(attributes, "transparent") && attributes.transparent;
@@ -78,9 +76,6 @@ class NativeWindow
 		if (!Reflect.hasField(contextAttributes, "hardware")) contextAttributes.hardware = true;
 		if (!Reflect.hasField(contextAttributes, "stencil")) contextAttributes.stencil = true;
 		if (!Reflect.hasField(contextAttributes, "vsync")) contextAttributes.vsync = false;
-		if (!Reflect.hasField(contextAttributes, "vsyncMode")
-			|| contextAttributes.vsyncMode == null) contextAttributes.vsyncMode = resolvedVSyncMode;
-		contextAttributes.vsync = (resolvedVSyncMode != VSyncMode.Off);
 
 		#if (cairo || (!lime_opengl && !lime_opengles))
 		if (!Reflect.hasField(contextAttributes, "type") || contextAttributes.type != VULKAN)

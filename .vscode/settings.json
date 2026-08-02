@@ -18,4 +18,8 @@
     },
     "files.trimTrailingWhitespace": true,
     "C_Cpp.autoAddFileAssociations": false,
+    "github-actions.workflows.pinned.workflows": [
+        ".github/workflows/main.yml"
+    ],
+    "cmake.ignoreCMakeListsMissing": true,
 }
