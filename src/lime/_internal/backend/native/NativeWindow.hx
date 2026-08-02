@@ -198,7 +198,7 @@ class NativeWindow
 		setTextInputEnabled(false);
 	}
 
-	public function alert(?type:Int = 2, message:String, title:String, ?buttons:Null<Array<String>> = null):Void
+	public function alert(?type:Int = 2, message:String, title:String, ?buttons:Null<Array<String>> = null):Int
 	{
 		if (handle != null)
 		{
@@ -215,6 +215,8 @@ class NativeWindow
 			return NativeCFFI.lime_window_alert(handle, type, message, title, childButtons);
 			#end
 		}
+
+		return 0;
 	}
 
 	public function setVSyncMode(mode:Int = 0):Bool
