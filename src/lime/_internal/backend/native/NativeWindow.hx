@@ -203,14 +203,35 @@ class NativeWindow
 		setTextInputEnabled(false);
 	}
 
-	public function alert(message:String, title:String):Void
+	public function alert(?type:Int = 2, message:String, title:String, ?buttons:Null<Array<String>> = null):Void
 	{
 		if (handle != null)
 		{
 			#if (!macro && lime_cffi)
-			NativeCFFI.lime_window_alert(handle, message, title);
+			if (buttons == null || buttons.length < 1) buttons = ["Ok"];
+			#if hl
+			var hlButtons = new hl.NativeArray<String>(buttons.length);
+			for (i in 0...buttons.length) hlButtons[i] = buttons[i];
+
+			final childButtons = hlButtons;
+			#else
+			final childButtons:Array<String> = buttons;
+			#end
+			return NativeCFFI.lime_window_alert(handle, type, message, title, childButtons);
 			#end
 		}
+	}
+
+	public function setVSyncMode(mode:Int = 0):Bool
+	{
+		if (handle != null)
+		{
+			#if (!macro && lime_cffi)
+			return NativeCFFI.lime_window_set_vsync_mode(handle, mode);
+			#end
+		}
+
+		return false;
 	}
 
 	public function close():Void

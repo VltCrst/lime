@@ -557,34 +557,80 @@ namespace lime {
 
 	}
 
+	int SDLWindow::Alert (int type, const char* message, const char* title, const char** buttons, int count) {
 
-	void SDLWindow::Alert (const char* message, const char* title) {
+		SDL_MessageBoxFlags flags = SDL_MESSAGEBOX_BUTTONS_LEFT_TO_RIGHT;
 
-		#if defined (HX_WINDOWS) && !defined (HX_WINRT)
+		switch (type)
+		{
+			case 0:
+				flags = SDL_MESSAGEBOX_ERROR;
+				break;
 
-		int count = 0;
-		int speed = 0;
-		bool stopOnForeground = true;
+			case 1:
+				flags = SDL_MESSAGEBOX_WARNING;
+				break;
 
-		SDL_SysWMinfo info;
-		SDL_VERSION (&info.version);
-		SDL_GetWindowWMInfo (sdlWindow, &info);
+			case 2:
+				flags = SDL_MESSAGEBOX_INFORMATION;
+				break;
 
-		FLASHWINFO fi;
-		fi.cbSize = sizeof (FLASHWINFO);
-		fi.hwnd = info.info.win.window;
-		fi.dwFlags = stopOnForeground ? FLASHW_ALL | FLASHW_TIMERNOFG : FLASHW_ALL | FLASHW_TIMER;
-		fi.uCount = count;
-		fi.dwTimeout = speed;
-		FlashWindowEx (&fi);
+			default:
+				flags = SDL_MESSAGEBOX_BUTTONS_LEFT_TO_RIGHT;
+		}
 
-		#endif
+		SDL_MessageBoxData data;
+		SDL_zero (data);
+		data.flags = flags;
+		data.title = title;
+		data.message = message;
+		data.window = sdlWindow;
 
-		if (message) {
+		std::vector<SDL_MessageBoxButtonData> sdlButtons;
 
-			SDL_ShowSimpleMessageBox (SDL_MESSAGEBOX_INFORMATION, title, message, sdlWindow);
+		sdlButtons.reserve (count);
+
+		if (count == 1) {
+
+			SDL_MessageBoxButtonData button;
+			button.flags = SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT;
+			button.buttonid = 0;
+			button.text = buttons[0];
+			sdlButtons.push_back (button);
+
+		} else {
+
+			for (int i = 0; i < count; ++i) {
+
+				SDL_MessageBoxButtonData button;
+				SDL_zero (button);
+				button.buttonid = i;
+				button.text = buttons[i];
+				sdlButtons.push_back (button);
+
+			}
 
 		}
+
+		data.numbuttons = sdlButtons.size ();
+		data.buttons = sdlButtons.data ();
+
+		int buttonID;
+
+		if (!SDL_ShowMessageBox (&data, &buttonID)) {
+
+			buttonID = -1;
+
+		}
+
+		return buttonID;
+
+	}
+
+
+	bool SDLWindow::SetVSyncMode (int mode) {
+
+		return SDL_GL_SetSwapInterval (mode);
 
 	}
 
@@ -1512,111 +1558,6 @@ namespace lime {
 		}
 
 		SDL_SetTextInputRect(&bounds);
-	}
-
-
-	void SDLWindow::SetVSyncMode (int vsyncMode) {
-
-		requestedVSyncMode = vsyncMode;
-		activeSwapInterval = 0;
-
-		if (useVulkan) {
-
-			switch (vsyncMode) {
-
-				case 1:
-					activeSwapInterval = 1;
-					flags |= WINDOW_FLAG_VSYNC;
-					break;
-
-				case 2:
-					activeSwapInterval = -1;
-					flags |= WINDOW_FLAG_VSYNC;
-					break;
-
-				case 3:
-					activeSwapInterval = 1;
-					flags |= WINDOW_FLAG_VSYNC;
-					break;
-
-				default:
-					flags &= ~WINDOW_FLAG_VSYNC;
-					break;
-
-			}
-
-			return;
-
-		}
-
-		if (!sdlWindow || !context || sdlRenderer) {
-
-			flags &= ~WINDOW_FLAG_VSYNC;
-			return;
-
-		}
-
-		SDL_Window* oldWindow = SDL_GL_GetCurrentWindow ();
-		SDL_GLContext oldContext = SDL_GL_GetCurrentContext ();
-		bool restoreContext = (oldWindow != sdlWindow || oldContext != context);
-
-		if (restoreContext) {
-
-			SDL_GL_MakeCurrent (sdlWindow, context);
-
-		}
-
-		switch (vsyncMode) {
-
-			case 1:
-
-				if (SDL_GL_SetSwapInterval (1) == 0) {
-
-					activeSwapInterval = 1;
-
-				}
-
-				break;
-
-			case 2:
-			case 3:
-
-				if (SDL_GL_SetSwapInterval (-1) == 0) {
-
-					activeSwapInterval = -1;
-
-				} else if (SDL_GL_SetSwapInterval (1) == 0) {
-
-					activeSwapInterval = 1;
-
-				}
-
-				break;
-
-			default:
-
-				SDL_GL_SetSwapInterval (0);
-				activeSwapInterval = 0;
-				break;
-
-		}
-
-		if (activeSwapInterval == 0) {
-
-			SDL_GL_SetSwapInterval (0);
-			flags &= ~WINDOW_FLAG_VSYNC;
-
-		} else {
-
-			flags |= WINDOW_FLAG_VSYNC;
-
-		}
-
-		if (restoreContext && oldWindow && oldContext) {
-
-			SDL_GL_MakeCurrent (oldWindow, oldContext);
-
-		}
 	}
 
 

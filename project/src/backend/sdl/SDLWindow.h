@@ -19,7 +19,8 @@ namespace lime {
 			SDLWindow (Application* application, int width, int height, int flags, const char* title);
 			~SDLWindow ();
 
-			virtual void Alert (const char* message, const char* title);
+			virtual int Alert (int type, const char* message, const char* title, const char** buttons, int count);
+			virtual bool SetVSyncMode (int mode);
 			virtual void Close ();
 			virtual void ContextFlip ();
 			virtual void* ContextLock (bool useCFFIValue);
@@ -58,7 +59,6 @@ namespace lime {
 			virtual void SetTextInputEnabled (bool enabled);
 			virtual void SetTextInputRect (Rectangle *rect);
 			virtual const char* SetTitle (const char* title);
-			virtual void SetVSyncMode (int vsyncMode);
 			virtual bool SetAlwaysOnTop (bool alwaysOnTop);
 			virtual bool SetVisible (bool visible);
 			virtual void WarpMouse (int x, int y);

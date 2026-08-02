@@ -22,6 +22,13 @@
 namespace lime {
 
 
+	enum VSyncMode {
+		VSYNC_ADAPTIVE = -1,
+		VSYNC_OFF = 0,
+		VSYNC_ON = 1,
+	};
+
+
 	class Window {
 
 
@@ -29,7 +36,8 @@ namespace lime {
 
 			virtual ~Window () {};
 
-			virtual void Alert (const char* message, const char* title) = 0;
+			virtual int Alert (int type, const char* message, const char* title, const char** buttons, int count) = 0;
+			virtual bool SetVSyncMode (int mode) = 0;
 			virtual void Close () = 0;
 			virtual void ContextFlip () = 0;
 			virtual void* ContextLock (bool useCFFIValue) = 0;
@@ -68,7 +76,6 @@ namespace lime {
 			virtual void SetTextInputEnabled (bool enable) = 0;
 			virtual void SetTextInputRect (Rectangle *rect) = 0;
 			virtual const char* SetTitle (const char* title) = 0;
-			virtual void SetVSyncMode (int vsyncMode) {}
 			virtual bool SetVisible (bool visible) = 0;
 			virtual bool SetAlwaysOnTop (bool alwaysOnTop) = 0;
 			virtual void WarpMouse (int x, int y) = 0;

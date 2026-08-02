@@ -2496,9 +2496,14 @@ class Window
 		#end
 	}
 
-	public function alert(message:String = null, title:String = null):Void
+	public function alert(?type:AlertType = INFO, message:String = null, title:String = null, ?buttons:Array<String> = null):Int
 	{
-		__backend.alert(message, title);
+		return __backend.alert(type, message, title, buttons);
+	}
+
+	public function setVSyncMode(mode:VSyncMode = OFF):Bool
+	{
+		return __backend.setVSyncMode(mode);
 	}
 
 	public function close():Void
@@ -2861,6 +2866,20 @@ class Window
 		move(__x, value);
 		return __y;
 	}
+}
+
+enum abstract AlertType(Int) from Int to Int
+{
+	public var ERROR = 0;
+	public var WARNING = 1;
+	public var INFO = 2;
+}
+
+enum abstract VSyncMode(Int) from Int to Int
+{
+	public var ADAPTIVE = -1;
+	public var OFF = 0;
+	public var ON = 1;
 }
 
 #if air

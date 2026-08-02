@@ -308,7 +308,9 @@ class NativeCFFI
 
 	@:cffi private static function lime_touch_event_manager_register(callback:Dynamic, eventObject:Dynamic):Void;
 
-	@:cffi private static function lime_window_alert(handle:Dynamic, message:String, title:String):Void;
+	@:cffi private static function lime_window_alert(handle:Dynamic, type:Int, message:String, title:String, buttons:Dynamic):Int;
+
+	@:cffi private static function lime_window_set_vsync_mode(handle:Dynamic, mode:Int):Bool;
 
 	@:cffi private static function lime_window_close(handle:Dynamic):Void;
 
@@ -926,7 +928,9 @@ class NativeCFFI
 		"lime_text_event_manager_register", "oov", false));
 	private static var lime_touch_event_manager_register = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime",
 		"lime_touch_event_manager_register", "oov", false));
-	private static var lime_window_alert = new cpp.Callable<cpp.Object->String->String->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_window_alert", "ossv",
+	private static var lime_window_alert = new cpp.Callable<cpp.Object->Int->String->String->cpp.Object->Int>(cpp.Prime._loadPrime("lime", "lime_window_alert", "oissoi",
+		false));
+	private static var lime_window_set_vsync_mode = new cpp.Callable<cpp.Object->Int->Bool>(cpp.Prime._loadPrime("lime", "lime_window_set_vsync_mode", "oib",
 		false));
 	private static var lime_window_close = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_window_close", "ov", false));
 	private static var lime_window_context_flip = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_window_context_flip", "ov", false));
@@ -1347,7 +1351,8 @@ class NativeCFFI
 	private static var lime_system_open_url = CFFI.load("lime", "lime_system_open_url", 2);
 	private static var lime_text_event_manager_register = CFFI.load("lime", "lime_text_event_manager_register", 2);
 	private static var lime_touch_event_manager_register = CFFI.load("lime", "lime_touch_event_manager_register", 2);
-	private static var lime_window_alert = CFFI.load("lime", "lime_window_alert", 3);
+	private static var lime_window_alert = CFFI.load("lime", "lime_window_alert", 5);
+	private static var lime_window_set_vsync_mode = CFFI.load("lime", "lime_window_set_vsync_mode", 2);
 	private static var lime_window_close = CFFI.load("lime", "lime_window_close", 1);
 	private static var lime_window_context_flip = CFFI.load("lime", "lime_window_context_flip", 1);
 	private static var lime_window_context_lock = CFFI.load("lime", "lime_window_context_lock", 1);
@@ -2033,7 +2038,15 @@ class NativeCFFI
 	@:hlNative("lime", "hl_touch_event_manager_register") private static function lime_touch_event_manager_register(callback:Void->Void,
 		eventObject:TouchEventInfo):Void {}
 
-	@:hlNative("lime", "hl_window_alert") private static function lime_window_alert(handle:CFFIPointer, message:String, title:String):Void {}
+	@:hlNative("lime", "hl_window_alert") private static function lime_window_alert(handle:CFFIPointer, type:Int, message:String, title:String, buttons:hl.NativeArray<String>):Int
+	{
+		return -1;
+	}
+
+	@:hlNative("lime", "hl_window_set_vsync_mode") private static function lime_window_set_vsync_mode(handle:CFFIPointer, mode:Int):Bool
+	{
+		return false;
+	}
 
 	@:hlNative("lime", "hl_window_close") private static function lime_window_close(handle:CFFIPointer):Void {}
 

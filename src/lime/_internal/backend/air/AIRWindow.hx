@@ -29,11 +29,16 @@ class AIRWindow extends FlashWindow
 		super(parent);
 	}
 
-	public override function alert(message:String, title:String):Void
+	public override function alert(?type:Int = 2, message:String, title:String, ?buttons:Array<String> = null):Void
 	{
 		if (nativeWindow != null)
 		{
-			nativeWindow.notifyUser(NotificationType.INFORMATIONAL);
+			if (buttons == null || buttons.length < 1) buttons = ['Ok'];
+
+			var notificationType = NotificationType.INFORMATIONAL;
+			if (type == 0) notificationType = NotificationType.CRITICAL;
+
+			nativeWindow.notifyUser(notificationType);
 
 			if (message != null)
 			{
@@ -42,6 +47,11 @@ class AIRWindow extends FlashWindow
 				htmlLoader.window.alert(message);
 			}
 		}
+	}
+
+	public override function setVSyncMode(mode:Int = 0):Bool
+	{
+		return false;
 	}
 
 	public override function close():Void

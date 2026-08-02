@@ -1536,22 +1536,6 @@ namespace lime {
 	}
 
 
-	void lime_application_set_vsync_mode (value application, int vsyncMode) {
-
-		Application* app = (Application*)val_data (application);
-		app->SetVSyncMode (vsyncMode);
-
-	}
-
-
-	HL_PRIM void HL_NAME(hl_application_set_vsync_mode) (HL_CFFIPointer* application, int vsyncMode) {
-
-		Application* app = (Application*)application->ptr;
-		app->SetVSyncMode (vsyncMode);
-
-	}
-
-
 	bool lime_application_update (value application) {
 
 		Application* app = (Application*)val_data (application);
@@ -4414,20 +4398,70 @@ namespace lime {
 	}
 
 
-	void lime_window_alert (value window, HxString message, HxString title) {
+	int lime_window_alert (value window, int type, HxString message, HxString title, value buttons) {
 
 		Window* targetWindow = (Window*)val_data (window);
-		targetWindow->Alert (hxs_utf8 (message, nullptr), hxs_utf8 (title, nullptr));
+
+		std::vector<const char*> targetButtons;
+
+		if (buttons) {
+
+			int buttonCount = val_array_size (buttons);
+
+			targetButtons.reserve (buttonCount);
+
+			for (int i = 0; i < buttonCount; i++) {
+
+				targetButtons.push_back (val_string (val_array_i (buttons, i)));
+
+			}
+
+		}
+
+		return targetWindow->Alert (type, hxs_utf8 (message, nullptr), hxs_utf8 (title, nullptr), targetButtons.data (), targetButtons.size ());
 
 	}
 
 
-	HL_PRIM void HL_NAME(hl_window_alert) (HL_CFFIPointer* window, hl_vstring* message, hl_vstring* title) {
+	HL_PRIM int HL_NAME(hl_window_alert) (HL_CFFIPointer* window, int type, hl_vstring* message, hl_vstring* title, hl_varray* buttons) {
 
 		Window* targetWindow = (Window*)window->ptr;
-		const char *cmessage = message ? hl_to_utf8(message->bytes) : nullptr;
-		const char *ctitle = title ? hl_to_utf8(title->bytes) : nullptr;
-		targetWindow->Alert (cmessage, ctitle);
+
+		std::vector<const char*> targetButtons;
+
+		if (buttons) {
+
+			int buttonCount = buttons->size;
+
+			targetButtons.reserve (buttonCount);
+
+			hl_vstring** buttonsData = hl_aptr (buttons, hl_vstring*);
+
+			for (int i = 0; i < buttonCount; i++) {
+
+				targetButtons.push_back (hl_to_utf8 ((const uchar*)((*buttonsData++)->bytes)));
+
+			}
+
+		}
+
+		return targetWindow->Alert (type, message ? hl_to_utf8(message->bytes) : nullptr, title ? hl_to_utf8(title->bytes) : nullptr, targetButtons.data (), targetButtons.size ());
+
+	}
+
+
+	bool lime_window_set_vsync_mode (value window, int mode) {
+
+		Window* targetWindow = (Window*)val_data (window);
+		return targetWindow->SetVSyncMode (mode);
+
+	}
+
+
+	HL_PRIM bool HL_NAME(hl_window_set_vsync_mode) (HL_CFFIPointer* window, int mode) {
+
+		Window* targetWindow = (Window*)window->ptr;
+		return targetWindow->SetVSyncMode (mode);
 
 	}
 
@@ -13330,7 +13364,6 @@ namespace lime {
 	DEFINE_PRIME1 (lime_application_quit);
 	DEFINE_PRIME6v (lime_application_set_main_loop);
 	DEFINE_PRIME2v (lime_application_set_frame_rate);
-	DEFINE_PRIME2v (lime_application_set_vsync_mode);
 	DEFINE_PRIME1 (lime_application_update);
 	DEFINE_PRIME2 (lime_audio_load);
 	DEFINE_PRIME2 (lime_audio_load_bytes);
@@ -13444,7 +13477,8 @@ namespace lime {
 	DEFINE_PRIME2 (lime_system_set_windows_console_mode);
 	DEFINE_PRIME2v (lime_text_event_manager_register);
 	DEFINE_PRIME2v (lime_touch_event_manager_register);
-	DEFINE_PRIME3v (lime_window_alert);
+	DEFINE_PRIME5 (lime_window_alert);
+	DEFINE_PRIME2 (lime_window_set_vsync_mode);
 	DEFINE_PRIME1v (lime_window_close);
 	DEFINE_PRIME1v (lime_window_context_flip);
 	DEFINE_PRIME1 (lime_window_context_lock);
@@ -13639,7 +13673,6 @@ namespace lime {
 	DEFINE_HL_PRIM (_I32, hl_application_quit, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, hl_application_set_main_loop, _TCFFIPOINTER _I32 _F64 _I32 _I32 _I32);
 	DEFINE_HL_PRIM (_VOID, hl_application_set_frame_rate, _TCFFIPOINTER _F64);
-	DEFINE_HL_PRIM (_VOID, hl_application_set_vsync_mode, _TCFFIPOINTER _I32);
 	DEFINE_HL_PRIM (_BOOL, hl_application_update, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_TAUDIOBUFFER, hl_audio_load_bytes, _TBYTES _TAUDIOBUFFER);
 	DEFINE_HL_PRIM (_TAUDIOBUFFER, hl_audio_load_file, _STRING _TAUDIOBUFFER);
@@ -13753,6 +13786,7 @@ namespace lime {
 	DEFINE_HL_PRIM (_VOID, hl_text_event_manager_register, _FUN (_VOID, _NO_ARG) _TTEXT_EVENT);
 	DEFINE_HL_PRIM (_VOID, hl_touch_event_manager_register, _FUN (_VOID, _NO_ARG) _TTOUCH_EVENT);
 	DEFINE_HL_PRIM (_VOID, hl_window_alert, _TCFFIPOINTER _STRING _STRING);
+	DEFINE_HL_PRIM (_BOOL, hl_window_set_vsync_mode, _TCFFIPOINTER _I32);
 	DEFINE_HL_PRIM (_VOID, hl_window_close, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, hl_window_context_flip, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_DYN, hl_window_context_lock, _TCFFIPOINTER);

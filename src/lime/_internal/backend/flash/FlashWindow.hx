@@ -61,7 +61,15 @@ class FlashWindow
 		create();
 	}
 
-	public function alert(message:String, title:String):Void {}
+	public function alert(?type:Int = 2, message:String, title:String, ?buttons:Array<String> = null):Void
+	{
+		if (buttons == null || buttons.length < 1) buttons = ['Ok'];
+	}
+
+	public function setVSyncMode(mode:Int = 0):Bool
+	{
+		return false;
+	}
 
 	public function close():Void
 	{
