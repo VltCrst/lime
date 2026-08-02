@@ -2843,20 +2843,6 @@ class Window
 	}
 }
 
-enum abstract AlertType(Int) from Int to Int
-{
-	public var ERROR = 0;
-	public var WARNING = 1;
-	public var INFO = 2;
-}
-
-enum abstract VSyncMode(Int) from Int to Int
-{
-	public var ADAPTIVE = -1;
-	public var OFF = 0;
-	public var ON = 1;
-}
-
 #if air
 @:noCompletion private typedef WindowBackend = lime._internal.backend.air.AIRWindow;
 #elseif flash
