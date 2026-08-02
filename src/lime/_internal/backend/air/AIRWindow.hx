@@ -29,7 +29,7 @@ class AIRWindow extends FlashWindow
 		super(parent);
 	}
 
-	public override function alert(?type:Int = 2, message:String, title:String, ?buttons:Array<String> = null):Void
+	public override function alert(?type:Int = 2, message:String, title:String, ?buttons:Array<String> = null):Int
 	{
 		if (nativeWindow != null)
 		{
@@ -47,6 +47,8 @@ class AIRWindow extends FlashWindow
 				htmlLoader.window.alert(message);
 			}
 		}
+
+		return 0;
 	}
 
 	public override function setVSyncMode(mode:Int = 0):Bool

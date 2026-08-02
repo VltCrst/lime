@@ -242,13 +242,15 @@ class HTML5Window
 		}
 	}
 
-	public function alert(?type:Int = 2, message:String, title:String, ?buttons:Array<String> = null):Void
+	public function alert(?type:Int = 2, message:String, title:String, ?buttons:Array<String> = null):Int
 	{
 		if (buttons == null || buttons.length < 1) buttons = ['Ok'];
 		if (message != null)
 		{
 			Browser.alert(message);
 		}
+
+		return 0;
 	}
 
 	public function setVSyncMode(mode:Int = 0):Bool
