@@ -81,7 +81,6 @@ namespace lime
 		requestedProfile = MAIN_LOOP_PROFILE_BALANCED;
 		requestedTimePrecisionMode = MAIN_LOOP_TIME_PRECISION_AUTO;
 		requestedUncapMode = MAIN_LOOP_UNCAP_OFF;
-		requestedVSyncMode = MAIN_LOOP_VSYNC_OFF;
 		schedulerUnthrottled = false;
 		sleepGuardMs = 2.0;
 		useDisplayDrivenFallback = false;
@@ -175,11 +174,6 @@ namespace lime
 		else if (realVSyncActive && hasExplicitFrameRate && clampedFrameRate >= displayRefreshRate)
 		{
 			schedulerUnthrottled = true;
-		}
-		else if (requestedVSyncMode == MAIN_LOOP_VSYNC_AUTO && !realVSyncActive && hasExplicitFrameRate && clampedFrameRate >= displayRefreshRate)
-		{
-			useDisplayDrivenFallback = true;
-			effectiveFrameRate = displayRefreshRate;
 		}
 
 		framePeriod = 1000.0 / effectiveFrameRate;
@@ -1302,8 +1296,6 @@ namespace lime
 		if (window && std::find (windows.begin (), windows.end (), window) == windows.end ())
 		{
 			windows.push_back (window);
-			window->SetVSyncMode (requestedVSyncMode);
-			RefreshVSyncState ();
 		}
 
 #ifdef IPHONE
@@ -1334,22 +1326,6 @@ namespace lime
 
 		requestedFrameRate = frameRate;
 		ApplyMainLoopSettings();
-	}
-
-	void SDLApplication::SetVSyncMode(int vsyncMode)
-	{
-
-		requestedVSyncMode = vsyncMode;
-
-		for (std::vector<SDLWindow*>::iterator iter = windows.begin (); iter != windows.end (); ++iter)
-		{
-			if (*iter)
-			{
-				(*iter)->SetVSyncMode (requestedVSyncMode);
-			}
-		}
-
-		RefreshVSyncState();
 	}
 
 	bool SDLApplication::Update()

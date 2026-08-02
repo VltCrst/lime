@@ -80,7 +80,6 @@ namespace lime {
 			virtual bool SetAlwaysOnTop (bool alwaysOnTop) = 0;
 			virtual void WarpMouse (int x, int y) = 0;
 			virtual int GetVSyncInterval () const { return 0; }
-			virtual int GetRequestedVSyncMode () const { return 0; }
 			virtual double GetRefreshRate () const { return 60.0; }
 			virtual uint64_t CreateVulkanSurface (uintptr_t instance) { return 0; }
 			virtual void GetVulkanDrawableSize (int* width, int* height) {

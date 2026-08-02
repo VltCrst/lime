@@ -2,7 +2,6 @@ package lime.ui;
 
 import lime.app.Application;
 import lime.app.Event;
-import lime.app.VSyncMode;
 import lime.graphics.Image;
 import lime.graphics.RenderContext;
 import lime.graphics.RenderContextAttributes;
@@ -48,14 +47,6 @@ class Window
 	 * higher refresh rate.
 	**/
 	public var frameRate(get, set):Float;
-
-	/**
-	 * The requested vertical-sync behavior for this window.
-	 *
-	 * On native targets, this is a convenience alias for the shared application
-	 * vertical-sync setting.
-	**/
-	public var vsyncMode(get, set):VSyncMode;
 
 	public var fullscreen(get, set):Bool;
 	public var height(get, set):Int;
@@ -209,7 +200,6 @@ class Window
 				"textInputEnabled": {get: p.get_textInputEnabled, set: p.set_textInputEnabled},
 				"title": {get: p.get_title, set: p.set_title},
 				"alwaysOnTop": {get: p.get_alwaysOnTop, set: p.set_alwaysOnTop},
-				"vsyncMode": {get: p.get_vsyncMode, set: p.set_vsyncMode},
 				"visible": {get: p.get_visible, set: p.set_visible},
 				"width": {get: p.get_width, set: p.set_width},
 				"x": {get: p.get_x, set: p.set_y},
@@ -2640,21 +2630,6 @@ class Window
 	@:noCompletion private inline function set_frameRate(value:Float):Float
 	{
 		return __backend.setFrameRate(value);
-	}
-
-	@:noCompletion private function get_vsyncMode():VSyncMode
-	{
-		return (application != null) ? application.vsyncMode : VSyncMode.Off;
-	}
-
-	@:noCompletion private function set_vsyncMode(value:VSyncMode):VSyncMode
-	{
-		if (application != null)
-		{
-			application.vsyncMode = value;
-			return application.vsyncMode;
-		}
-		return value;
 	}
 
 	@:noCompletion private inline function get_fullscreen():Bool

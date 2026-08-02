@@ -232,7 +232,6 @@ namespace lime {
 	SDLWindow::SDLWindow (Application* application, int width, int height, int flags, const char* title) {
 
 		activeSwapInterval = 0;
-		requestedVSyncMode = (flags & WINDOW_FLAG_VSYNC) ? 1 : 0;
 		sdlTexture = 0;
 		sdlRenderer = 0;
 		context = 0;
@@ -449,8 +448,6 @@ namespace lime {
 			context = SDL_GL_CreateContext (sdlWindow);
 
 			if (context && SDL_GL_MakeCurrent (sdlWindow, context) == 0) {
-
-				SetVSyncMode (requestedVSyncMode);
 
 				OpenGLBindings::Init ();
 
@@ -716,13 +713,6 @@ namespace lime {
 	int SDLWindow::GetVSyncInterval () const {
 
 		return activeSwapInterval;
-
-	}
-
-
-	int SDLWindow::GetRequestedVSyncMode () const {
-
-		return requestedVSyncMode;
 
 	}
 

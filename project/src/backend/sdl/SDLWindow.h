@@ -63,7 +63,6 @@ namespace lime {
 			virtual bool SetVisible (bool visible);
 			virtual void WarpMouse (int x, int y);
 			virtual int GetVSyncInterval () const;
-			virtual int GetRequestedVSyncMode () const;
 			virtual double GetRefreshRate () const;
 			virtual uint64_t CreateVulkanSurface (uintptr_t instance);
 			virtual void GetVulkanDrawableSize (int* width, int* height);
@@ -79,7 +78,6 @@ namespace lime {
 			SDL_GLContext context;
 			int contextHeight;
 			int contextWidth;
-			int requestedVSyncMode;
 			bool useVulkan;
 
 	};

@@ -103,20 +103,12 @@ class Application extends Module
 	**/
 	public var windows(get, null):Array<Window>;
 
-	/**
-		The requested vertical-sync behavior for this application.
-		On native targets, this applies to the shared application
-		render loop and active windows.
-	**/
-	public var vsyncMode(get, set):VSyncMode;
-
 	@:noCompletion private var __backend:ApplicationBackend;
 	@:noCompletion private var __frameRate:Float;
 	@:noCompletion private var __frameConfigured:Bool;
 	@:noCompletion private var __frameOptions:FrameOptions;
 	@:noCompletion private var __frameProfile:FrameProfile;
 	@:noCompletion private var __preloader:Preloader;
-	@:noCompletion private var __vsyncMode:VSyncMode;
 	@:noCompletion private var __window:Window;
 	@:noCompletion private var __windowByID:Map<Int, Window>;
 	@:noCompletion private var __windows:Array<Window>;
@@ -131,7 +123,6 @@ class Application extends Module
 				"frameOptions": {get: p.get_frameOptions, set: p.set_frameOptions},
 				"frameProfile": {get: p.get_frameProfile, set: p.set_frameProfile},
 				"preloader": {get: p.get_preloader},
-				"vsyncMode": {get: p.get_vsyncMode, set: p.set_vsyncMode},
 				"window": {get: p.get_window},
 				"windows": {get: p.get_windows}
 			});
@@ -163,11 +154,9 @@ class Application extends Module
 		__frameProfile = FrameProfile.Balanced;
 		__windowByID = new Map();
 		__windows = new Array();
-		__vsyncMode = VSyncMode.Off;
 
 		__backend = new ApplicationBackend(this);
 		__backend.configureFrameTiming(__frameProfile, __frameRate, __copyFrameOptions(__frameOptions));
-		__backend.setVSyncMode(__vsyncMode);
 
 		__registerLimeModule(this);
 
@@ -214,9 +203,9 @@ class Application extends Module
 		Configure the frame pacing profile, optional pacing overrides,
 		and optional vertical-sync mode at runtime.
 	**/
-	public function configureFrameTiming(profile:FrameProfile, ?options:FrameOptions, ?vsyncMode:VSyncMode):Void
+	public function configureFrameTiming(profile:FrameProfile, ?options:FrameOptions):Void
 	{
-		__applyFrameConfiguration(profile, options, vsyncMode, true);
+		__applyFrameConfiguration(profile, options, true);
 	}
 
 	/**
@@ -713,27 +702,16 @@ class Application extends Module
 		return __windows;
 	}
 
-	@:noCompletion private inline function get_vsyncMode():VSyncMode
-	{
-		return __vsyncMode;
-	}
-
 	@:noCompletion private function set_frameOptions(value:FrameOptions):FrameOptions
 	{
-		__applyFrameConfiguration(__frameProfile, value, __vsyncMode, true);
+		__applyFrameConfiguration(__frameProfile, value, true);
 		return __copyFrameOptions(__frameOptions);
 	}
 
 	@:noCompletion private function set_frameProfile(value:FrameProfile):FrameProfile
 	{
-		__applyFrameConfiguration(value, __frameOptions, __vsyncMode, true);
+		__applyFrameConfiguration(value, __frameOptions, true);
 		return __frameProfile;
-	}
-
-	@:noCompletion private function set_vsyncMode(value:VSyncMode):VSyncMode
-	{
-		__applyFrameConfiguration(__frameProfile, __frameOptions, value, true);
-		return __vsyncMode;
 	}
 
 	@:noCompletion private function get_deviceOrientation():Orientation
@@ -741,11 +719,10 @@ class Application extends Module
 		return __backend.getDeviceOrientation();
 	}
 
-	@:noCompletion private function __applyFrameConfiguration(profile:FrameProfile, ?options:FrameOptions, ?vsyncMode:VSyncMode, lock:Bool):Void
+	@:noCompletion private function __applyFrameConfiguration(profile:FrameProfile, ?options:FrameOptions, lock:Bool):Void
 	{
 		__frameProfile = (profile != null) ? profile : __frameProfile;
 		__frameOptions = __normalizeFrameOptions(options, __frameOptions);
-		__vsyncMode = (vsyncMode != null) ? vsyncMode : __vsyncMode;
 
 		if (lock)
 		{
@@ -755,7 +732,6 @@ class Application extends Module
 		if (__backend != null)
 		{
 			__backend.configureFrameTiming(__frameProfile, __frameRate, __copyFrameOptions(__frameOptions));
-			__backend.setVSyncMode(__vsyncMode);
 		}
 	}
 
@@ -843,31 +819,6 @@ class Application extends Module
 		return __frameProfile;
 	}
 
-	@:noCompletion private function __resolveVSyncMode(attributes:WindowAttributes):VSyncMode
-	{
-		if (__frameConfigured)
-		{
-			return __vsyncMode;
-		}
-
-		if (attributes != null && Reflect.hasField(attributes, "context") && attributes.context != null)
-		{
-			var context = attributes.context;
-
-			if (Reflect.hasField(context, "vsyncMode") && context.vsyncMode != null)
-			{
-				return context.vsyncMode;
-			}
-
-			if (Reflect.hasField(context, "vsync") && context.vsync)
-			{
-				return VSyncMode.On;
-			}
-		}
-
-		return __vsyncMode;
-	}
-
 	@:allow(lime.ui.Window)
 	@:noCompletion private function __seedFrameConfiguration(attributes:WindowAttributes):Void
 	{
@@ -877,13 +828,13 @@ class Application extends Module
 		}
 
 		__frameRate = __resolveFrameRate(attributes);
-		__applyFrameConfiguration(__resolveFrameProfile(attributes), __resolveFrameOptions(attributes), __resolveVSyncMode(attributes), true);
+		__applyFrameConfiguration(__resolveFrameProfile(attributes), __resolveFrameOptions(attributes), true);
 	}
 
 	@:noCompletion private function __setFrameRateFromWindow(value:Float):Float
 	{
 		__frameRate = __normalizeFrameRate(value);
-		__applyFrameConfiguration(__frameProfile, __frameOptions, __vsyncMode, true);
+		__applyFrameConfiguration(__frameProfile, __frameOptions, true);
 		return __frameRate;
 	}
 

@@ -124,7 +124,6 @@ namespace lime {
 			VkSwapchainKHR swapchain;
 			VkFormat swapchainFormat;
 			VkPresentModeKHR swapchainPresentMode;
-			int requestedVSyncMode;
 			VkExtent2D swapchainExtent;
 			VkRenderPass renderPass;
 			VkCommandPool commandPool;

@@ -145,8 +145,6 @@ class VulkanRenderContext
 
 		This renderer exists for smoke tests and samples while the public `VK`
 		surface grows into the full rendering API.
-		The renderer respects the current Lime `vsyncMode` preference when it
-		chooses a swapchain present mode.
 	**/
 	public function createRenderer(applicationName:String = "Lime"):VKRenderer
 	{

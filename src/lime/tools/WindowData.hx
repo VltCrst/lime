@@ -14,7 +14,6 @@ abstract WindowData({
 	@:optional var resizable:Bool;
 	@:optional var borderless:Bool;
 	@:optional var vsync:Bool;
-	@:optional var vsyncMode:String;
 	@:optional var fullscreen:Bool;
 	@:optional var allowHighDPI:Bool;
 	@:optional var alwaysOnTop:Bool;
@@ -51,7 +50,6 @@ abstract WindowData({
 			resizable: false,
 			borderless: false,
 			vsync: false,
-			vsyncMode: null,
 			fullscreen: false,
 			allowHighDPI: false,
 			alwaysOnTop: false,

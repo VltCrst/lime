@@ -36,7 +36,6 @@ namespace lime {
 			virtual int Quit ();
 			virtual void SetMainLoop (int profile, double frameRate, int timePrecision, int busyWait, int uncapMode);
 			virtual void SetFrameRate (double frameRate);
-			virtual void SetVSyncMode (int vsyncMode);
 			virtual bool Update ();
 
 			void RegisterWindow (SDLWindow *window);
@@ -114,15 +113,6 @@ namespace lime {
 
 			};
 
-			enum MainLoopVSyncMode {
-
-				MAIN_LOOP_VSYNC_OFF = 0,
-				MAIN_LOOP_VSYNC_ON = 1,
-				MAIN_LOOP_VSYNC_ADAPTIVE = 2,
-				MAIN_LOOP_VSYNC_AUTO = 3
-
-			};
-
 			bool active;
 			bool allowBusyWait;
 			ApplicationEvent applicationEvent;
@@ -149,7 +139,6 @@ namespace lime {
 			int requestedProfile;
 			int requestedTimePrecisionMode;
 			int requestedUncapMode;
-			int requestedVSyncMode;
 			RenderEvent renderEvent;
 			SensorEvent sensorEvent;
 			bool schedulerUnthrottled;

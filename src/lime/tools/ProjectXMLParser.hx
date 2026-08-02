@@ -2006,17 +2006,8 @@ class ProjectXMLParser extends HXProject
 						Reflect.setField(windows[id], "colorDepth", parsedValue);
 					}
 
-				case "vsync", "vsync-mode":
-					var parsedVSync = parseVSyncValue(value);
-					if (parsedVSync == null)
-					{
-						Log.warn("Ignoring unknown " + name + "=\"" + value + "\"");
-					}
-					else
-					{
-						Reflect.setField(windows[id], "vsync", parsedVSync != "off");
-						Reflect.setField(windows[id], "vsyncMode", parsedVSync);
-					}
+				case "vsync":
+					Reflect.setField(windows[id], "vsync", value == "true");
 
 				default:
 					if (Reflect.hasField(WindowData.expectedFields, name))

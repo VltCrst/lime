@@ -70,7 +70,7 @@ namespace lime {
 	}
 
 
-	static VkPresentModeKHR ChoosePresentMode (const std::vector<VkPresentModeKHR>& presentModes, int requestedVSyncMode) {
+	static VkPresentModeKHR ChoosePresentMode (const std::vector<VkPresentModeKHR>& presentModes) {
 
 		bool hasImmediate = false;
 		bool hasMailbox = false;
@@ -103,32 +103,6 @@ namespace lime {
 					break;
 
 			}
-
-		}
-
-		switch (requestedVSyncMode) {
-
-			case 0:
-				if (hasImmediate) return VK_PRESENT_MODE_IMMEDIATE_KHR;
-				if (hasMailbox) return VK_PRESENT_MODE_MAILBOX_KHR;
-				break;
-
-			case 2:
-				if (hasMailbox) return VK_PRESENT_MODE_MAILBOX_KHR;
-				#ifdef VK_PRESENT_MODE_FIFO_RELAXED_KHR
-				if (hasFifoRelaxed) return VK_PRESENT_MODE_FIFO_RELAXED_KHR;
-				#endif
-				break;
-
-			case 3:
-				if (hasMailbox) return VK_PRESENT_MODE_MAILBOX_KHR;
-				if (hasFifo) return VK_PRESENT_MODE_FIFO_KHR;
-				if (hasImmediate) return VK_PRESENT_MODE_IMMEDIATE_KHR;
-				break;
-
-			default:
-				if (hasFifo) return VK_PRESENT_MODE_FIFO_KHR;
-				break;
 
 		}
 
@@ -207,7 +181,6 @@ namespace lime {
 		swapchain (VK_NULL_HANDLE),
 		swapchainFormat (VK_FORMAT_UNDEFINED),
 		swapchainPresentMode (VK_PRESENT_MODE_FIFO_KHR),
-		requestedVSyncMode (0),
 		renderPass (VK_NULL_HANDLE),
 		commandPool (VK_NULL_HANDLE),
 		imageAvailableSemaphore (VK_NULL_HANDLE),
@@ -361,7 +334,6 @@ namespace lime {
 		swapchainDirty = false;
 		swapchainFormat = VK_FORMAT_UNDEFINED;
 		swapchainPresentMode = VK_PRESENT_MODE_FIFO_KHR;
-		requestedVSyncMode = 0;
 		memset (&swapchainExtent, 0, sizeof (swapchainExtent));
 
 	}
@@ -376,8 +348,7 @@ namespace lime {
 
 		}
 
-		int currentRequestedVSyncMode = window ? window->GetRequestedVSyncMode () : 0;
-		if (swapchainDirty || !swapchain || swapchainExtent.width == 0 || swapchainExtent.height == 0 || currentRequestedVSyncMode != requestedVSyncMode) {
+		if (swapchainDirty || !swapchain || swapchainExtent.width == 0 || swapchainExtent.height == 0) {
 
 			if (!RecreateSwapchain ()) {
 
@@ -995,8 +966,7 @@ namespace lime {
 
 		}
 
-		int currentRequestedVSyncMode = window ? window->GetRequestedVSyncMode () : 0;
-		VkPresentModeKHR presentMode = ChoosePresentMode (presentModes, currentRequestedVSyncMode);
+		VkPresentModeKHR presentMode = ChoosePresentMode (presentModes);
 
 		int drawableWidth = 0;
 		int drawableHeight = 0;
@@ -1087,7 +1057,6 @@ namespace lime {
 
 		swapchainFormat = surfaceFormat.format;
 		swapchainPresentMode = presentMode;
-		requestedVSyncMode = currentRequestedVSyncMode;
 		swapchainDirty = false;
 
 		uint32_t swapchainImageCount = 0;
