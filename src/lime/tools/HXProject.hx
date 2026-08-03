@@ -1148,7 +1148,7 @@ class HXProject extends Script
 		{
 			for (daExclude in exclude)
 			{
-				if (path.contains(daExclude.replace('*', '')))
+				if (StringTools.contains(path, StringTools.replace(daExclude, "*", "")))
 				{
 					return;
 				}

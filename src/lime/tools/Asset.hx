@@ -15,8 +15,7 @@ class Asset
 	public var glyphs:String;
 	public var id:String;
 	public var library:String;
-	// public var path:String;
-	// public var rename:String;
+	public var deliveryPackName:String;
 	public var resourceName:String;
 	public var sourcePath:String;
 	public var targetPath:String;
@@ -43,6 +42,7 @@ class Asset
 		flatName = StringTools.getFlatName(targetPath);
 		format = Path.extension(path).toLowerCase();
 		glyphs = "32-255";
+		deliveryPackName = "";
 
 		if (type == null)
 		{
@@ -111,6 +111,7 @@ class Asset
 		asset.id = id;
 		asset.library = library;
 		asset.resourceName = resourceName;
+		asset.deliveryPackName = deliveryPackName;
 		asset.sourcePath = sourcePath;
 		asset.targetPath = targetPath;
 		asset.type = type;
