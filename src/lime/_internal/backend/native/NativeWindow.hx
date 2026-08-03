@@ -210,7 +210,7 @@ class NativeWindow
 
 			final childButtons = hlButtons;
 			#else
-			final childButtons:Array<String> = buttons;
+			final childButtons = buttons;
 			#end
 			return NativeCFFI.lime_window_alert(handle, type, message, title, childButtons);
 			#end
