@@ -300,6 +300,7 @@ class ProjectXMLParser extends HXProject
 		var library:String = null;
 		var targetPath = "";
 		var glyphs:String = null;
+		var deliveryPackName:String = null;
 		var type:AssetType = null;
 
 		if (element.has.path)
