@@ -1052,9 +1052,10 @@ class HXProject extends Script
 	public function pushResource(path:String, ?renameTo:String, ?library:String, ?isEmbed:Bool = false, ?deliveryPackName:String):Void
 	{
 		if (path == "") return;
+		if (library == null) library = "default";
 
 		var asset = new Asset(path, renameTo, null, isEmbed, true);
-		asset.library = library ?? "default";
+		asset.library = library;
 
 		if (deliveryPackName != null && (targetFlags.exists('bundle') && target == Platform.ANDROID))
 		{
@@ -1078,10 +1079,11 @@ class HXProject extends Script
 	public function pushResourcePath(path:String, ?renameTo:String, library:String, ?include:Array<String>, ?exclude:Array<String>, ?isEmbed:Bool = false, ?deliveryPackName:String):Void
 	{
 		if (path == "") return;
+		if (renameTo == null) renameTo = path;
 		if (include == null) include = [];
 		if (exclude == null) exclude = [];
 
-		var childPath = renameTo ?? path;
+		var childPath = renameTo;
 		if (childPath != "") childPath += '/';
 
 		if (!FileSystem.exists(path))
@@ -1170,7 +1172,12 @@ class HXProject extends Script
 	{
 		if (!isBuild()) return;
 
-		var exportPath:Null<String> = app.path ?? "";
+		var exportPath:String = "";
+		if (app.path != null)
+		{
+			exportPath = app.path;
+		}
+
 		var platform:String = (targetFlags.exists('hl')) ? 'hl' : (target != Platform.MAC ? Std.string(target) : 'macos');
 		var basePath:String = Path.join([exportPath, platform, "bin"]);
 		var assetsPath:String = "";
