@@ -202,15 +202,16 @@ class NativeWindow
 	{
 		if (handle != null)
 		{
+			var childButtons = ["Ok"];
 			#if (!macro && lime_cffi)
 			if (buttons == null || buttons.length < 1) buttons = ["Ok"];
 			#if hl
 			var hlButtons = new hl.NativeArray<String>(buttons.length);
 			for (i in 0...buttons.length) hlButtons[i] = buttons[i];
 
-			final childButtons = hlButtons;
+			childButtons = hlButtons;
 			#else
-			final childButtons = buttons;
+			childButtons = buttons;
 			#end
 			return NativeCFFI.lime_window_alert(handle, type, message, title, childButtons);
 			#end
