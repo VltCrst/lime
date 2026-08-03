@@ -34,7 +34,7 @@ jobs:
           haxelib --global update haxelib --quiet
           haxelib install ../hxcpp-4.3.45.zip --quiet
           haxelib install format --quiet
-          haxelib install hxp --quiet
+          haxelib git hxp https://github.com/VltCrst/hxp c944f659ec5dd6012a374ac56e6b8e3fbe18b457 --quiet
           haxelib install utest --quiet
 
       - name: Rebuild Lime tools
@@ -132,7 +132,7 @@ jobs:
           haxelib --global update haxelib --quiet
           haxelib install ../hxcpp-4.3.45.zip --quiet
           haxelib install format --quiet
-          haxelib install hxp --quiet
+          haxelib git hxp https://github.com/VltCrst/hxp c944f659ec5dd6012a374ac56e6b8e3fbe18b457 --quiet
           haxelib install utest --quiet
 
       - name: Rebuild Lime tools
@@ -223,7 +223,7 @@ jobs:
           curl --output ../hxcpp-4.3.45.zip --location https://github.com/HaxeFoundation/hxcpp/releases/download/v4.3.45/hxcpp-4.3.45.zip
           haxelib install ../hxcpp-4.3.45.zip --quiet
           haxelib install format --quiet
-          haxelib install hxp --quiet
+          haxelib git hxp https://github.com/VltCrst/hxp c944f659ec5dd6012a374ac56e6b8e3fbe18b457 --quiet
           haxelib install utest --quiet
 
       - name: Rebuild Lime tools
@@ -316,7 +316,7 @@ jobs:
           curl --output ../hxcpp-4.3.45.zip --location https://github.com/HaxeFoundation/hxcpp/releases/download/v4.3.45/hxcpp-4.3.45.zip
           haxelib install ../hxcpp-4.3.45.zip --quiet
           haxelib install format --quiet
-          haxelib install hxp --quiet
+          haxelib git hxp https://github.com/VltCrst/hxp c944f659ec5dd6012a374ac56e6b8e3fbe18b457 --quiet
           haxelib install utest --quiet
 
       - name: Rebuild Lime tools
@@ -438,7 +438,7 @@ jobs:
           curl --output ../hxcpp-4.3.45.zip --location https://github.com/HaxeFoundation/hxcpp/releases/download/v4.3.45/hxcpp-4.3.45.zip
           haxelib install ../hxcpp-4.3.45.zip --quiet
           haxelib install format --quiet
-          haxelib install hxp --quiet
+          haxelib git hxp https://github.com/VltCrst/hxp c944f659ec5dd6012a374ac56e6b8e3fbe18b457 --quiet
 
       - name: Prepare Lime
         run: |
@@ -512,7 +512,7 @@ jobs:
           curl --output ../hxcpp-4.3.45.zip --location https://github.com/HaxeFoundation/hxcpp/releases/download/v4.3.45/hxcpp-4.3.45.zip
           haxelib install ../hxcpp-4.3.45.zip --quiet
           haxelib install format --quiet
-          haxelib install hxp --quiet
+          haxelib git hxp https://github.com/VltCrst/hxp c944f659ec5dd6012a374ac56e6b8e3fbe18b457 --quiet
 
       - name: Prepare Lime
         run: |
@@ -572,7 +572,7 @@ jobs:
           curl --output ../hxcpp-4.3.45.zip --location https://github.com/HaxeFoundation/hxcpp/releases/download/v4.3.45/hxcpp-4.3.45.zip
           haxelib install ../hxcpp-4.3.45.zip --quiet
           haxelib install format --quiet
-          haxelib install hxp --quiet
+          haxelib git hxp https://github.com/VltCrst/hxp c944f659ec5dd6012a374ac56e6b8e3fbe18b457 --quiet
           haxelib install svg --quiet
           haxelib install openfl --quiet
 

@@ -1,6 +1,8 @@
 package lime.tools;
 
 import haxe.io.Eof;
+import haxe.io.Path;
+import haxe.io.Bytes;
 import haxe.Json;
 import haxe.Serializer;
 import haxe.Unserializer;
@@ -26,17 +28,15 @@ class HXProject extends Script
 	public var app:ApplicationData;
 	public var architectures:Array<Architecture>;
 	public var assets:Array<Asset>;
-	// public var command:String;
 	public var config:ConfigData;
 	public var debug:Bool;
-	// public var defines:Map<String, Dynamic>;
+	public var environmentConfig:Map<String, Dynamic>;
 	public var dependencies:Array<Dependency>;
 	public var environment:Map<String, String>;
 	public var excludeArchitectures:Array<Architecture>;
 	public var haxedefs:Map<String, Dynamic>;
 	public var haxeflags:Array<String>;
 	public var haxelibs:Array<Haxelib>;
-	public var host(get, null):Platform;
 	public var icons:Array<Icon>;
 	public var javaPaths:Array<String>;
 	public var keystore:Keystore;
@@ -852,16 +852,21 @@ class HXProject extends Script
 		defines.set("target", Std.string(target).toLowerCase());
 		defines.set("platform", defines.get("target"));
 
-		switch (System.hostPlatform)
+		if (isWindowsHost())
 		{
-			case WINDOWS:
-				defines.set("host", "windows");
-			case MAC:
-				defines.set("host", "mac");
-			case LINUX:
-				defines.set("host", "linux");
-			default:
-				defines.set("host", "unknown");
+			defines.set("host", "windows");
+		}
+		else if (isMacHost())
+		{
+			defines.set("host", "mac");
+		}
+		else if (isLinuxHost())
+		{
+			defines.set("host", "linux");
+		}
+		else
+		{
+			defines.set("host", "unknown");
 		}
 
 		#if lime
@@ -988,9 +993,24 @@ class HXProject extends Script
 		}
 	}
 
+	public function adMobileKeys():Void
+	{
+		if (environmentConfig == null) return;
+
+		var appID:Null<String> = Std.string(environmentConfig.get('ADMOB_APP_ID'));
+		if (appID != null && appID != "null")
+		{
+			setenv("ADMOB_APPID", appID);
+		}
+		else
+		{
+			errorMsg('ADMOB_APP_ID in `environmentConfig` not defined! Check your config defines.');
+		}
+	}
+
 	public function path(value:String):Void
 	{
-		if (host == Platform.WINDOWS)
+		if (isWindowsHost())
 		{
 			setenv("PATH", value + ";" + Sys.getEnv("PATH"));
 		}
@@ -998,6 +1018,219 @@ class HXProject extends Script
 		{
 			setenv("PATH", value + ":" + Sys.getEnv("PATH"));
 		}
+	}
+
+	public function pushIcon(icon:String, ?size:Int = 0):Void
+	{
+		if (icons != null)
+		{
+			icons.push(new Icon(icon, size));
+		}
+	}
+
+	public function pushHaxelib(name:String, ?version:String = ""):Void
+	{
+		if (haxelibs != null)
+		{
+			haxelibs.push(new Haxelib(name, version));
+		}
+	}
+
+	public function pushHaxeFlag(value:String):Void
+	{
+		if (haxeflags != null)
+		{
+			haxeflags.push(value);
+		}
+	}
+
+	public function pushHaxeFlagMacro(value:String):Void
+	{
+		pushHaxeFlag('--macro $value');
+	}
+
+	public function pushResource(path:String, ?renameTo:String, ?library:String, ?isEmbed:Bool = false, ?deliveryPackName:String):Void
+	{
+		if (path == "") return;
+
+		var asset = new Asset(path, renameTo, null, isEmbed, true);
+		asset.library = library ?? "default";
+
+		if (deliveryPackName != null && (targetFlags.exists('bundle') && target == Platform.ANDROID))
+		{
+			asset.deliveryPackName = deliveryPackName;
+		}
+
+		assets.push(asset);
+	}
+
+	public function pushLibrary(libName:String, ?isEmbed:Bool = false, ?preload:Bool = false):Void
+	{
+		if (libName == "") return;
+
+		final sourcePath = "";
+		if (libraries != null)
+		{
+			libraries.push(new Library(sourcePath, libName, null, isEmbed, preload, false, ""));
+		}
+	}
+
+	public function pushResourcePath(path:String, ?renameTo:String, library:String, ?include:Array<String>, ?exclude:Array<String>, ?isEmbed:Bool = false, ?deliveryPackName:String):Void
+	{
+		if (path == "") return;
+		if (include == null) include = [];
+		if (exclude == null) exclude = [];
+
+		var childPath = renameTo ?? path;
+		if (childPath != "") childPath += '/';
+
+		if (!FileSystem.exists(path))
+		{
+			errorMsg('Resource asset "${path}" not exists! Please check if the file exists at the specified `path`.');
+		}
+		else if (!FileSystem.isDirectory(path))
+		{
+			errorMsg('Resource asset "${path}" is not directory type! Expected a directory.');
+		}
+
+		for (file in FileSystem.readDirectory(path))
+		{
+			if (FileSystem.isDirectory('${path}/${file}'))
+			{
+				if (filter(file, ['*'], exclude))
+				{
+					pushResourcePath('${path}/${file}', '${childPath}${file}', library, include, exclude, isEmbed, deliveryPackName);
+				}
+			}
+			else
+			{
+				if (filter(file, include, exclude))
+				{
+					pushResource('${path}/${file}', '${childPath}${file}', library, isEmbed, deliveryPackName);
+				}
+			}
+		}
+	}
+
+	public function removeResource(path:String, ?library:String):Void
+	{
+		if (path == "") return;
+
+		for (asset in assets)
+		{
+			if (asset.sourcePath == path)
+			{
+				if (library != null && asset.library != library) continue;
+
+				assets.remove(asset);
+				break;
+			}
+		}
+	}
+
+	public function removeResourcePath(path:String, ?library:String, ?exclude:Array<String>):Void
+	{
+		if (path == "") return;
+		if (exclude == null) exclude = [];
+
+		if (!FileSystem.exists(path))
+		{
+			errorMsg('Resource asset "${path}" not exists! Please check if the file exists at the specified `path`.');
+		}
+		else if (!FileSystem.isDirectory(path))
+		{
+			errorMsg('Resource asset "${path}" is not directory type! Expected a directory.');
+		}
+
+		if (exclude.length > 0)
+		{
+			for (daExclude in exclude)
+			{
+				if (path.contains(daExclude.replace('*', '')))
+				{
+					return;
+				}
+			}
+		}
+
+		for (file in FileSystem.readDirectory(path))
+		{
+			if (FileSystem.isDirectory('${path}/${file}'))
+			{
+				removeResourcePath('${path}/${file}', library);
+			}
+			else
+			{
+				removeResource('${path}/${file}', library);
+			}
+		}
+	}
+
+	public function removeExportedBaseResources():Void
+	{
+		if (!isBuild()) return;
+
+		var exportPath:Null<String> = app.path ?? "";
+		var platform:String = (targetFlags.exists('hl')) ? 'hl' : (target != Platform.MAC ? Std.string(target) : 'macos');
+		var basePath:String = Path.join([exportPath, platform, "bin"]);
+		var assetsPath:String = "";
+
+		switch (platformType)
+		{
+			case PlatformType.DESKTOP:
+				if (target == Platform.MAC)
+				{
+					assetsPath = Path.join([basePath, '${app.file}.app', 'Contents', 'Resources', 'base']);
+				}
+				else
+				{
+					assetsPath = Path.join([basePath, "base"]);
+				}
+			case PlatformType.MOBILE:
+				if (target == Platform.ANDROID && !targetFlags.exists('bundle'))
+				{
+					assetsPath = Path.join([basePath, 'app', 'src', 'main', 'assets', 'base']);
+				}
+				else if (target == Platform.IOS)
+				{
+					assetsPath = Path.join([exportPath, platform, '${app.file}', 'assets', 'base']);
+				}
+				else
+				{
+					return;
+				}
+			default:
+				return;
+		}
+
+		if (FileSystem.exists(assetsPath))
+		{
+			infoMsg("Removing base resources from export folder. (" + assetsPath + ")");
+			removeDirectoryRecursive(assetsPath);
+		}
+		else
+		{
+			infoMsg("Base resources folder in export not exists! (" + assetsPath + ")");
+		}
+	}
+
+	public function removeDirectoryRecursive(path:String):Void
+	{
+		if (!FileSystem.exists(path)) return;
+		for (file in FileSystem.readDirectory(path))
+		{
+			var absPath:String = Path.join([path, file]);
+			if (FileSystem.isDirectory(absPath))
+			{
+				removeDirectoryRecursive(absPath);
+			}
+			else
+			{
+				FileSystem.deleteFile(absPath);
+			}
+		}
+
+		FileSystem.deleteDirectory(path);
 	}
 
 	// #if lime
@@ -1063,6 +1296,25 @@ class HXProject extends Script
 	}
 
 	// #end
+
+	public function infoMsg(value:String):Void
+	{
+		if (!(isDisplay() || isClean()))
+			Sys.println('[INFO] ' + value);
+	}
+
+	public function warnMsg(value:String):Void
+	{
+		if (!(isDisplay() || isClean()))
+			Sys.println('[WARNING] ' + value);
+	}
+
+	public function errorMsg(value:String):Void
+	{
+		Sys.stderr().write(Bytes.ofString('[ERROR] ' + value));
+		Sys.exit(1);
+	}
+
 	public function setenv(name:String, value:String):Void
 	{
 		if (value == null)
@@ -1107,12 +1359,6 @@ class HXProject extends Script
 		{
 			environment.set(name, value);
 		}
-	}
-
-	// Getters & Setters
-	private function get_host():Platform
-	{
-		return System.hostPlatform;
 	}
 
 	private function get_templateContext():Dynamic
