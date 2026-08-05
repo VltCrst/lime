@@ -132,7 +132,7 @@ class Application extends Module
 	/**
 		Creates a new Application instance
 	**/
-	public function new()
+	public function new(?_meta:Map<String, String>)
 	{
 		super();
 
@@ -141,7 +141,7 @@ class Application extends Module
 			Application.current = this;
 		}
 
-		meta = new Map();
+		meta = (_meta != null) ? _meta : new Map();
 		modules = new Array();
 		__frameRate = 60;
 		__frameConfigured = false;
