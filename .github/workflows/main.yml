@@ -574,7 +574,7 @@ jobs:
           haxelib install format --quiet
           haxelib git hxp https://github.com/VltCrst/hxp fc4c83084c9b91b25a98e28981e08bc4a84c1476 --quiet
           haxelib install svg --quiet
-          haxelib git openfl https://github.com/VltCrst/openfl 0196fb047d90a505e34f13ff4e9a7ff7f9251c1f --quiet
+          haxelib git openfl https://github.com/VltCrst/openfl d36932cc0c09ca81819a9ab7f96b3b44f1cad5a2 --quiet
 
       - name: Rebuild Lime tools
         run: |

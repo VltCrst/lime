@@ -16,7 +16,7 @@ abstract UInt8Array(JSUInt8Array) from JSUInt8Array to JSUInt8Array
 	public inline static var BYTES_PER_ELEMENT:Int = 1;
 
 	@:generic
-	public inline function new<T>(?elements:Int, ?array:Array<T>, #if openfl ?vector:openfl.utils.Vector<Int>, #end ?view:ArrayBufferView, ?buffer:ArrayBuffer,
+	public inline function new<T>(?elements:Int, ?array:Array<T>, #if openfl ?vector:openfl.Vector<Int>, #end ?view:ArrayBufferView, ?buffer:ArrayBuffer,
 			?byteoffset:Int = 0, ?len:Null<Int>)
 	{
 		if (elements != null)
@@ -95,7 +95,7 @@ abstract UInt8Array(ArrayBufferView) from ArrayBufferView to ArrayBufferView
 	#if (haxe_ver < 4.2)
 	@:generic
 	#end
-	public inline function new<T>(?elements:Int, ?buffer:ArrayBuffer, ?array:Array<T>, #if openfl ?vector:openfl.utils.Vector<Int>, #end ?view:ArrayBufferView,
+	public inline function new<T>(?elements:Int, ?buffer:ArrayBuffer, ?array:Array<T>, #if openfl ?vector:openfl.Vector<Int>, #end ?view:ArrayBufferView,
 			?byteoffset:Int = 0, ?len:Null<Int>)
 	{
 		if (elements != null)
