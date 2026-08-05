@@ -81,7 +81,7 @@ jobs:
 
       - name: Install samples
         run: |
-          haxelib git lime-samples https://github.com/openfl/lime-samples --quiet
+          haxelib git lime-samples https://github.com/openfl/lime-samples 1174be73fb67df843a915f230629665d7fd9b4c4 --quiet
 
       - name: Build HelloWorld sample
         run: |
@@ -161,7 +161,7 @@ jobs:
 
       - name: Install samples
         run: |
-          haxelib git lime-samples https://github.com/openfl/lime-samples --quiet
+          haxelib git lime-samples https://github.com/openfl/lime-samples 1174be73fb67df843a915f230629665d7fd9b4c4 --quiet
 
       - name: Build HelloWorld sample
         run: |
@@ -273,7 +273,7 @@ jobs:
 
       - name: Install samples
         run: |
-          haxelib git lime-samples https://github.com/openfl/lime-samples --quiet
+          haxelib git lime-samples https://github.com/openfl/lime-samples 1174be73fb67df843a915f230629665d7fd9b4c4 --quiet
 
       # - name: Build HelloWorld sample
       #   run: |
@@ -371,7 +371,7 @@ jobs:
 
       - name: Install samples
         run: |
-          haxelib git lime-samples https://github.com/openfl/lime-samples --quiet
+          haxelib git lime-samples https://github.com/openfl/lime-samples 1174be73fb67df843a915f230629665d7fd9b4c4 --quiet
 
       - name: Build HelloWorld sample
         run: |
@@ -470,7 +470,7 @@ jobs:
 
       - name: Install samples
         run: |
-          haxelib git lime-samples https://github.com/openfl/lime-samples --quiet
+          haxelib git lime-samples https://github.com/openfl/lime-samples 1174be73fb67df843a915f230629665d7fd9b4c4 --quiet
 
       - name: Build HelloWorld sample
         run: |
@@ -533,7 +533,7 @@ jobs:
 
       - name: Install samples
         run: |
-          haxelib git lime-samples https://github.com/openfl/lime-samples --quiet
+          haxelib git lime-samples https://github.com/openfl/lime-samples 1174be73fb67df843a915f230629665d7fd9b4c4 --quiet
 
       # - name: Build HelloWorld sample
       #   run: |
@@ -574,7 +574,7 @@ jobs:
           haxelib install format --quiet
           haxelib git hxp https://github.com/VltCrst/hxp fc4c83084c9b91b25a98e28981e08bc4a84c1476 --quiet
           haxelib install svg --quiet
-          haxelib install openfl --quiet
+          haxelib git openfl https://github.com/VltCrst/openfl 0196fb047d90a505e34f13ff4e9a7ff7f9251c1f --quiet
 
       - name: Rebuild Lime tools
         run: |
@@ -722,7 +722,7 @@ jobs:
 
       - name: Install Haxe dependencies
         run: |
-          haxelib git lime-samples https://github.com/openfl/lime-samples --quiet
+          haxelib git lime-samples https://github.com/openfl/lime-samples 1174be73fb67df843a915f230629665d7fd9b4c4 --quiet
 
       - uses: actions/download-artifact@v8
         with:
@@ -772,7 +772,7 @@ jobs:
 
       - name: Install Haxe dependencies
         run: |
-          haxelib git lime-samples https://github.com/openfl/lime-samples --quiet
+          haxelib git lime-samples https://github.com/openfl/lime-samples 1174be73fb67df843a915f230629665d7fd9b4c4 --quiet
 
       - uses: actions/download-artifact@v8
         with:
@@ -820,7 +820,7 @@ jobs:
       - name: Install Haxe dependencies
         run: |
           haxelib install genes --quiet
-          haxelib git lime-samples https://github.com/openfl/lime-samples --quiet
+          haxelib git lime-samples https://github.com/openfl/lime-samples 1174be73fb67df843a915f230629665d7fd9b4c4 --quiet
 
       - uses: actions/download-artifact@v8
         with:
@@ -889,7 +889,7 @@ jobs:
 
       - name: Install Haxe dependencies
         run: |
-          haxelib git lime-samples https://github.com/openfl/lime-samples --quiet
+          haxelib git lime-samples https://github.com/openfl/lime-samples 1174be73fb67df843a915f230629665d7fd9b4c4 --quiet
 
       - uses: actions/download-artifact@v8
         with:

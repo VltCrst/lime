@@ -18,7 +18,7 @@ abstract UInt8ClampedArray(JSUInt8ClampedArray) from JSUInt8ClampedArray to JSUI
 	public inline static var BYTES_PER_ELEMENT:Int = 1;
 
 	@:generic
-	public inline function new<T>(?elements:Int, ?array:Array<T>, #if openfl ?vector:openfl.Vector<Int>, #end ?view:ArrayBufferView, ?buffer:ArrayBuffer,
+	public inline function new<T>(?elements:Int, ?array:Array<T>, #if openfl ?vector:openfl.utils.Vector<Int>, #end ?view:ArrayBufferView, ?buffer:ArrayBuffer,
 			?byteoffset:Int = 0, ?len:Null<Int>)
 	{
 		if (elements != null)
@@ -107,7 +107,7 @@ abstract UInt8ClampedArray(ArrayBufferView) from ArrayBufferView to ArrayBufferV
 	#if (haxe_ver < 4.2)
 	@:generic
 	#end
-	public inline function new<T>(?elements:Int, ?buffer:ArrayBuffer, ?array:Array<T>, #if openfl ?vector:openfl.Vector<Int>, #end ?view:ArrayBufferView,
+	public inline function new<T>(?elements:Int, ?buffer:ArrayBuffer, ?array:Array<T>, #if openfl ?vector:openfl.utils.Vector<Int>, #end ?view:ArrayBufferView,
 			?byteoffset:Int = 0, ?len:Null<Int>)
 	{
 		if (elements != null)
