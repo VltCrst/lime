@@ -273,14 +273,13 @@ class NativeApplication
 		{
 			case AXIS_MOVE:
 				var gamepad = Gamepad.devices.get(gamepadEventInfo.id);
-				if (gamepad != null) @:privateAccess gamepad.onAxisMove.__dispatchWithTimestamp(gamepadEventInfo.timestamp, gamepadEventInfo.axis,
-					gamepadEventInfo.axisValue);
+				if (gamepad != null) gamepad.onAxisMove.dispatch(gamepadEventInfo.axis, gamepadEventInfo.axisValue, gamepadEventInfo.timestamp);
 			case BUTTON_DOWN:
 				var gamepad = Gamepad.devices.get(gamepadEventInfo.id);
-				if (gamepad != null) @:privateAccess gamepad.onButtonDown.__dispatchWithTimestamp(gamepadEventInfo.timestamp, gamepadEventInfo.button);
+				if (gamepad != null) gamepad.onButtonDown.dispatch(gamepadEventInfo.button, gamepadEventInfo.timestamp);
 			case BUTTON_UP:
 				var gamepad = Gamepad.devices.get(gamepadEventInfo.id);
-				if (gamepad != null) @:privateAccess gamepad.onButtonUp.__dispatchWithTimestamp(gamepadEventInfo.timestamp, gamepadEventInfo.button);
+				if (gamepad != null) gamepad.onButtonUp.dispatch(gamepadEventInfo.button, gamepadEventInfo.timestamp);
 			case CONNECT:
 				Gamepad.__connect(gamepadEventInfo.id);
 
@@ -327,9 +326,9 @@ class NativeApplication
 			switch (type)
 			{
 				case KEY_DOWN:
-					@:privateAccess window.onKeyDown.__dispatchWithTimestamp(keyEventInfo.timestamp, keyCode, modifier);
+					window.onKeyDown.dispatch(keyCode, modifier, keyEventInfo.timestamp);
 				case KEY_UP:
-					@:privateAccess window.onKeyUp.__dispatchWithTimestamp(keyEventInfo.timestamp, keyCode, modifier);
+					window.onKeyUp.dispatch(keyCode, modifier, keyEventInfo.timestamp);
 			}
 
 			#if (windows || linux)

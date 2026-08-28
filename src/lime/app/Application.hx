@@ -214,21 +214,21 @@ class Application extends Module
 		@param	axis	The axis that was moved
 		@param	value	The axis value (between 0 and 1)
 	**/
-	public function onGamepadAxisMove(gamepad:Gamepad, axis:GamepadAxis, value:Float):Void {}
+	public function onGamepadAxisMove(gamepad:Gamepad, axis:GamepadAxis, value:Float, timestamp:Int):Void {}
 
 	/**
 		Called when a gamepad button down event is fired
 		@param	gamepad	The current gamepad
 		@param	button	The button that was pressed
 	**/
-	public function onGamepadButtonDown(gamepad:Gamepad, button:GamepadButton):Void {}
+	public function onGamepadButtonDown(gamepad:Gamepad, button:GamepadButton, timestamp:Int):Void {}
 
 	/**
 		Called when a gamepad button up event is fired
 		@param	gamepad	The current gamepad
 		@param	button	The button that was released
 	**/
-	public function onGamepadButtonUp(gamepad:Gamepad, button:GamepadButton):Void {}
+	public function onGamepadButtonUp(gamepad:Gamepad, button:GamepadButton, timestamp:Int):Void {}
 
 	/**
 		Called when a gamepad is connected
@@ -289,14 +289,14 @@ class Application extends Module
 		@param	keyCode	The code of the key that was pressed
 		@param	modifier	The modifier of the key that was pressed
 	**/
-	public function onKeyDown(keyCode:KeyCode, modifier:KeyModifier):Void {}
+	public function onKeyDown(keyCode:KeyCode, modifier:KeyModifier, timestamp:Int):Void {}
 
 	/**
 		Called when a key up event is fired on the primary window
 		@param	keyCode	The code of the key that was released
 		@param	modifier	The modifier of the key that was released
 	**/
-	public function onKeyUp(keyCode:KeyCode, modifier:KeyModifier):Void {}
+	public function onKeyUp(keyCode:KeyCode, modifier:KeyModifier, timestamp:Int):Void {}
 
 	/**
 		Called when the module is exiting

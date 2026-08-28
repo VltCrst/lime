@@ -19,9 +19,9 @@ class Gamepad
 	public var guid(get, never):String;
 	public var id(default, null):Int;
 	public var name(get, never):String;
-	public var onAxisMove = new Event<GamepadAxis->Float->Void>();
-	public var onButtonDown = new Event<GamepadButton->Void>();
-	public var onButtonUp = new Event<GamepadButton->Void>();
+	public var onAxisMove = new Event<GamepadAxis->Float->Int->Void>();
+	public var onButtonDown = new Event<GamepadButton->Int->Void>();
+	public var onButtonUp = new Event<GamepadButton->Int->Void>();
 	public var onDisconnect = new Event<Void->Void>();
 
 	#if (js && html5)

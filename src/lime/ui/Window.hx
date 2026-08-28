@@ -73,12 +73,12 @@ class Window
 	/**
 		Fired when the user presses a key down when this window has focus.
 	**/
-	public var onKeyDown(default, null) = new Event<KeyCode->KeyModifier->Void>();
+	public var onKeyDown(default, null) = new Event<KeyCode->KeyModifier->Int->Void>();
 
 	/**
 		Fired when the user releases a key that was down.
 	**/
-	public var onKeyUp(default, null) = new Event<KeyCode->KeyModifier->Void>();
+	public var onKeyUp(default, null) = new Event<KeyCode->KeyModifier->Int->Void>();
 
 	public var onLeave(default, null) = new Event<Void->Void>();
 
