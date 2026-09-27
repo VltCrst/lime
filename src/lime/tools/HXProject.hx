@@ -1237,7 +1237,11 @@ class HXProject extends Script
 			}
 		}
 
-		FileSystem.deleteDirectory(path);
+		try {
+			FileSystem.deleteDirectory(path);
+		} catch(e) {
+			errorMsg('A file/folder in the export folder is currently open. Close it and try building again.');
+		}
 	}
 
 	// #if lime
